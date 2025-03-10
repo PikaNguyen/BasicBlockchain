@@ -212,6 +212,7 @@ func main() {
 	blocChain.Mining()
 	blocChain.Print()
 
+	//Tính toán lại value cuối cùng của các address sau khi đã thực hiện transaction hoặc nhận được reward sau khi mining
 	fmt.Printf("my_  %.1f\n", blocChain.CalculateTotalAmount("my_blockchain_address"))
 	fmt.Printf("C  %.1f\n", blocChain.CalculateTotalAmount("C"))
 	fmt.Printf("E  %.1f\n", blocChain.CalculateTotalAmount("E"))
