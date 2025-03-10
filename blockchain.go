@@ -9,7 +9,11 @@ import (
 	"time"
 )
 
-const MINING_DIFFICULTY = 3
+const (
+	MINING_DIFFICULTY = 3
+	MINING_SENDER     = "THE BLOCKCHAIN"
+	MINING_REWARD     = 1.0
+)
 
 func init() {
 	log.SetPrefix("Blockchain: ")
@@ -23,13 +27,15 @@ type Block struct {
 }
 
 type Blockchain struct {
-	transactionPool []*Transaction
-	chain           []*Block
+	transactionPool   []*Transaction
+	chain             []*Block
+	blockchainAddress string
 }
 
-func NewBlockchain() *Blockchain {
+func NewBlockchain(blockchainAddress string) *Blockchain {
 	b := &Block{}
 	bc := new(Blockchain)
+	bc.blockchainAddress = blockchainAddress
 	bc.CreateBlock(0, b.Hash())
 	return bc
 }
@@ -149,7 +155,7 @@ func (bc *Blockchain) ValidProof(nonce int, preHash [32]byte, transactions []*Tr
 	zeros := strings.Repeat("0", difficulty)
 	guesBlock := Block{0, nonce, preHash, transactions}
 	guessHashStr := fmt.Sprintf("%x", guesBlock.Hash())
-	fmt.Println(guessHashStr)
+	//fmt.Println(guessHashStr)
 	return guessHashStr[:difficulty] == zeros
 }
 
@@ -163,24 +169,30 @@ func (bc *Blockchain) ProofOfWork() int {
 	return nonce
 }
 
+func (bc *Blockchain) Mining() bool {
+	bc.AddTransaction(MINING_SENDER, bc.blockchainAddress, MINING_REWARD)
+	nonce := bc.ProofOfWork()
+	prevHash := bc.LastBlock().Hash()
+	bc.CreateBlock(nonce, prevHash)
+	log.Println("Action = mining ...., status = success")
+	return true
+}
+
 func main() {
 	//b := NewBlock(0, "init hash")
 	//b.Print()
+	myBlockchainAddress := "my_blockchain_address"
 
-	blocChain := NewBlockchain()
+	blocChain := NewBlockchain(myBlockchainAddress)
 	blocChain.Print()
 
 	blocChain.AddTransaction("A", "B", 0.1)
-	preHash := blocChain.LastBlock().Hash()
-	nonce := blocChain.ProofOfWork()
-	blocChain.CreateBlock(nonce, preHash)
+	blocChain.Mining()
 	blocChain.Print()
 
 	blocChain.AddTransaction("C", "E", 0.1)
 	blocChain.AddTransaction("CDS", "E11", 12)
-	preHash = blocChain.LastBlock().Hash()
-	nonce = blocChain.ProofOfWork()
-	blocChain.CreateBlock(nonce, preHash)
+	blocChain.Mining()
 	blocChain.Print()
 
 	//block := &Block{nonce: 1}
