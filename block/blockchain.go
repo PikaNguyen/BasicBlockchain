@@ -15,10 +15,6 @@ const (
 	MINING_REWARD     = 1.0
 )
 
-func init() {
-	log.SetPrefix("Blockchain: ")
-}
-
 type Block struct {
 	timestamp    int64
 	nonce        int
@@ -193,27 +189,4 @@ func (bc *Blockchain) CalculateTotalAmount(blockchainAddress string) float32 {
 		}
 	}
 	return totalAmout
-}
-
-func main() {
-	//b := NewBlock(0, "init hash")
-	//b.Print()
-	myBlockchainAddress := "my_blockchain_address"
-
-	blocChain := NewBlockchain(myBlockchainAddress)
-	blocChain.Print()
-
-	blocChain.AddTransaction("A", "B", 0.1)
-	blocChain.Mining()
-	blocChain.Print()
-
-	blocChain.AddTransaction("C", "E", 0.1)
-	blocChain.AddTransaction("CDS", "C", 12)
-	blocChain.Mining()
-	blocChain.Print()
-
-	//Tính toán lại value cuối cùng của các address sau khi đã thực hiện transaction hoặc nhận được reward sau khi mining
-	fmt.Printf("my_  %.1f\n", blocChain.CalculateTotalAmount("my_blockchain_address"))
-	fmt.Printf("C  %.1f\n", blocChain.CalculateTotalAmount("C"))
-	fmt.Printf("E  %.1f\n", blocChain.CalculateTotalAmount("E"))
 }
