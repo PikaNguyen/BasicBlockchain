@@ -16,4 +16,7 @@ func main() {
 	fmt.Println(w.PrivateKeyStr())
 	fmt.Println("==========")
 	fmt.Println(w.PublicKeyStr())
+	fmt.Println("==========")
+
+	fmt.Println(w.BlockchainAddress())
 }
